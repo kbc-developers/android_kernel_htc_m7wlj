@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2011-2015,2016 The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -90,6 +90,11 @@ static struct page_info *alloc_largest_available(unsigned long size,
 			continue;
 
 		info = kmalloc(sizeof(struct page_info), GFP_KERNEL);
+		if (!info) {
+			__free_pages(page, orders[i]);
+			return NULL;
+		}
+
 		info->page = page;
 		info->order = orders[i];
 		return info;
@@ -384,7 +389,7 @@ int ion_iommu_heap_map_iommu(struct ion_buffer *buffer,
 			      buffer->sg_table->sgl,
 			      buffer->size, prot);
 	if (ret) {
-		pr_err("%s: could not map %lx in domain %p\n",
+		pr_err("%s: could not map %lx in domain %pK\n",
 			__func__, data->iova_addr, domain);
 		goto out1;
 	}
