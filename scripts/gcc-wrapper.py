@@ -41,6 +41,7 @@ import subprocess
 
 allowed_warnings = set([
     "alignment.c:327",
+    "bma250.h:684",
     "mmu.c:602",
     "return_address.c:62",
 	"swab.h:49",
